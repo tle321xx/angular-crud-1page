@@ -1,0 +1,26 @@
+{
+  "posts": [
+    {
+      "firstName": "ssssssssss",
+      "email": "sssss@tle.com",
+      "gender": "F",
+      "phone": "777777",
+      "major": [
+        "Cargo"
+      ],
+      "date": "2024-02-28T17:00:00.000Z",
+      "id": 1
+    },
+    {
+      "firstName": "adfsadf",
+      "email": "tle@tle.com",
+      "gender": "M",
+      "phone": "123456",
+      "major": [
+        "Logistic"
+      ],
+      "date": "2024-02-26T17:00:00.000Z",
+      "id": 2
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+<div class="form-area">
+  <h1>User Details</h1>
+  <form [formGroup]="userForm">
+    <div class="container text-center w-50">
+      <div class="d-flex justify-content-between">
+        <mat-form-field appearance="fill">
+          <mat-label>First Name</mat-label>
+          <input
+            type="string"
+            matInput
+            placeholder=""
+            formControlName="firstName"
+            [ngClass]="{
+              'is-invalid':
+                userForm.controls['firstName'].touched &&
+                userForm.controls['firstName'].invalid
+            }"
+            required
+          />
+          <mat-error
+            *ngIf="
+              userForm.controls['firstName']?.hasError('minlength') &&
+              userForm.controls['firstName'].touched
+            "
+          >
+            At least 5 letters
+          </mat-error>
+          <mat-error
+            *ngIf="
+              userForm.controls['firstName']?.hasError('required') &&
+              userForm.controls['firstName'].touched
+            "
+          >
+            First Name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input
+            type="email"
+            matInput
+            placeholder="pat@example.com"
+            formControlName="email"
+            [ngClass]="{
+              'is-invalid':
+                userForm.controls['email'].touched &&
+                userForm.controls['email'].invalid
+            }"
+            required
+          />
+          <mat-error
+            *ngIf="
+              userForm.controls['email'].hasError('email') &&
+              !userForm.controls['email'].hasError('required')
+            "
+          >
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="userForm.controls['email'].hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="d-flex justify-content-between">
+        <mat-form-field appearance="fill">
+          <mat-label>Gender</mat-label>
+          <mat-select
+            [(ngModel)]="selectedGender"
+            name="gender"
+            formControlName="gender"
+          >
+            <mat-option *ngFor="let gender of genders" [value]="gender.value">
+              {{ gender.viewValue }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="userForm.controls['gender'].hasError('required')">
+            Gender is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Phone</mat-label>
+          <input
+            matInput
+            formControlName="phone"
+            required
+            [ngClass]="{
+              'is-invalid':
+                userForm.controls['phone'].touched &&
+                userForm.controls['phone'].invalid
+            }"
+          />
+          <mat-error *ngIf="!userForm.controls['phone'].hasError('required')">
+            Please enter phone
+          </mat-error>
+          <mat-error *ngIf="userForm.controls['phone'].hasError('required')">
+            phone is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <mat-form-field appearance="fill">
+          <mat-label>Which of the following is important to you? </mat-label>
+          <mat-select formControlName="major" multiple [ngClass]="{
+            'is-invalid':
+              userForm.controls['major'].touched &&
+              userForm.controls['major'].invalid
+          }">
+            <mat-option
+              *ngFor="let major of majors"
+              [value]="major"
+              >{{ major }}</mat-option
+            >
+          </mat-select>
+          <mat-error
+            *ngIf="
+              userForm.controls['major'].hasError('email') &&
+              !userForm.controls['major'].hasError('required')
+            "
+          >
+            Please enter a major
+          </mat-error>
+          <mat-error *ngIf="userForm.controls['major'].hasError('required')">
+            major is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Date</mat-label>
+            <input
+              matInput
+              formControlName="date"
+              [matDatepicker]="picker"
+              [ngClass]="{
+                'is-invalid':
+                  userForm.controls['date'].touched &&
+                  userForm.controls['date'].invalid
+              }"
+              class="custom-date-input" 
+              
+              required
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error
+            *ngIf="
+              userForm.controls['date'].hasError('required') &&
+              userForm.controls['date'].touched
+            "
+          >
+            Date is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        
+      </div>
+    </div>
+  </form>
+  <div mat-title-action [align]="'center'">
+    <button *ngIf="!isUpdateActive" [disabled]="userForm.invalid" style="margin-left: 8px" mat-raised-button color="primary" (click)="addUser()">
+      {{actionBtn}}
+    </button>
+    <button *ngIf="isUpdateActive" (click)="updateUser()" mat-raised-button color="green">
+      Update
+    </button>
+  </div>
+</div>
+
+
+
+<mat-form-field>
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+    </ng-container>
+
+    <!-- Progress Column -->
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> firstName </th>
+      <td mat-cell *matCellDef="let row"> {{row.firstName}}% </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> email </th>
+      <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+    </ng-container>
+
+    <!-- Fruit Column -->
+
+<ng-container matColumnDef="gender">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header> Gender </th>
+  <td mat-cell *matCellDef="let row" (mouseover)="showGender(row.gender)" (mouseout)="hideGenderTooltip()">
+    <div matTooltip="{{tooltipContent}}" [matTooltipDisabled]="!showGender">
+      {{row.gender}}
+    </div>
+  </td>
+</ng-container>
+
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> phone </th>
+      <td mat-cell *matCellDef="let row"> {{row.phone}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="major">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> major </th>
+      <td mat-cell *matCellDef="let row"> {{row.major}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> date </th>
+      <td mat-cell *matCellDef="let row"> {{row.date}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+      <td mat-cell *matCellDef="let row"> 
+        <button class="m-3" (click)="editUser(row.id)" mat-raised-button color="primary">Edit</button>
+        <button class="m-3" (click)="deleteUser(row.id)" mat-raised-button color="warn">Delete</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+</div>
+
